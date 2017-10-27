@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: https://chaodongyang.com/
+url: http://chaodongyang.com/
 date_format: "ordinal"
 title: Android开发社区
 subtitle: "学习改变人生"
