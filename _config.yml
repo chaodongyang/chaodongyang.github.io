@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: https://chaodongyang.github.io/
+url: https://chaodongyang.com/
 date_format: "ordinal"
 title: Android开发社区
 subtitle: "学习改变人生"
@@ -18,7 +18,7 @@ side_bar_repo_limit: 5
 # ---------------- #
 author: 东洋
 organization: 
-organization_url: http://www.zkh360.com
+organization_url: https://chaodongyang.com/
 github_username: chaodongyang
 location: Shanghai, China
 email: 1184259921@qq.com
