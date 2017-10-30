@@ -2,13 +2,13 @@
 layout: page
 title: About
 description: 打码改变世界
-keywords: Zhuang Ma, 马壮
+keywords: dongyang chao, 晁东洋
 comments: true
 menu: 关于
 permalink: /about/
 ---
 
-我是马壮，码而生，码而立。
+我是传奇，知识改变命运。
 
 仰慕「优雅编码的艺术」。
 
