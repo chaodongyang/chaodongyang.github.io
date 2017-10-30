@@ -89,20 +89,20 @@ comments_provider: gitalk
 # !!!Important!!! Please modify infos below to yours
 # https://disqus.com
 disqus:
-    username: mzlogin
+    username: chaodongyang
 # https://imsun.net/posts/gitment-introduction/
 gitment:
-    owner: mzlogin
-    repo: blog-comments
+    owner: chaodongyang
+    repo: chaodongyang.github.io
     oauth:
-        client_id: d2e1cbbd298958076462
-        client_secret: b42a4178e5fd4a7cf63189ef4b1453b05c375709
+        client_id: 69da8c2cdb18361285c3
+        client_secret: 8a83bd8a7a5aa3f73916c7937f4de97726201990
 # https://github.com/gitalk/gitalk#install
 gitalk:
-    owner: mzlogin
-    repo: blog-comments
-    clientID: d2e1cbbd298958076462
-    clientSecret: b42a4178e5fd4a7cf63189ef4b1453b05c375709
+    owner: chaodongyang
+    repo: chaodongyang.github.io
+    clientID: ce06a78586c48efbb98c
+    clientSecret: b61130a2d4494d29f43618c47749456ed61950b1
 # 在使用其它评论组件时可点击显示 Disqus
 lazy_load_disqus : true
 
@@ -110,4 +110,4 @@ lazy_load_disqus : true
 #    Analytics     #
 # ---------------- #
 google:
-    analytics_id: UA-80669434-1
+    analytics_id: UA-108914115-1
