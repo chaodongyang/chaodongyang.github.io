@@ -72,18 +72,18 @@ Markdown 支持有序列表和无序列表。
 
 无序列表使用星号、加号或是减号作为列表标记：
 
-![](images/blog/wuxuliebiao.png)
+![](/images/blog/wuxuliebiao.png)
 
 有序列表则使用数字接着一个英文句点：
 
-![](images/blog/youxuliebiao.png)
+![](/images/blog/youxuliebiao.png)
 
 #### 代码区块
 
 和程序相关的写作或是标签语言原始码通常会有已经排版好的代码区块，通常这些
 区块我们并不希望它以一般段落文件的方式去排版，而是照原来的样子显示。
 
-![](images/blog/daimaqukuai.png)
+![](/images/blog/daimaqukuai.png)
 
 #### 分割线
 
@@ -91,7 +91,7 @@ Markdown 支持有序列表和无序列表。
 有其他东西。你也可以在星号或是减号中间插入空格。下面每种写法都可以建
 立分隔线：
 
-![](images/blog/fengexian.png)
+![](/images/blog/fengexian.png)
 
 ## 区段元素
 #### 粗体和斜体
@@ -99,13 +99,13 @@ Markdown 的粗体和斜体也非常简单：
 
 用两个 * 包含一段文本就是粗体的语法，用一个 * 包含一段文本就是斜体的语法。
 
-![](images/blog/ziti.png)
+![](/images/blog/ziti.png)
 
 #### 连接
 链接：在 Markdown 中，插入链接只需要使用 ``` [显示文本](链接地址) ``` 即可。
 [我的博客](http://chaodongyang.com/ "博客")
 
-![](images/blog/lianjie.png)
+![](/images/blog/lianjie.png)
 
 #### 图片
 
@@ -124,7 +124,7 @@ Markdown 使用一种和链接很相似的语法来标记图片。
 | 学生        |  30人          | 20      |
 | 老师        |  3人           | 40      |
 ```
-![](images/blog/biaoge.png)
+![](/images/blog/biaoge.png)
 
 ## 其他
 #### 反斜杠
