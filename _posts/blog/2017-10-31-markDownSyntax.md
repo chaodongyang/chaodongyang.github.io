@@ -9,7 +9,7 @@ keywords: MarkDown, MarkDown 语法详解
 
 ## 什么是 MarkDown
 
-什么是 MarkDown ? MarkDown 是一种轻量级的 「标记语言」，通常为程序员全体所使用。目前它已经是全球最大的
+什么是 MarkDown ? MarkDown 是一种轻量级的 「标记语言」，通常为程序员群体所使用。目前它已经是全球最大的
 技术分享网站 GitHub 和技术问答网站 StackOverFlow 的御用格式。
 
 ## MarkDown 语法说明
