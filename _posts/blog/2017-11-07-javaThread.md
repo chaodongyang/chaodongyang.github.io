@@ -7,8 +7,7 @@ keywords: java线程 java多线程 java并发编程 java线程池  ThreadPoolExe
 ---
 
 ## 什么是线程
-
-线程，有时被称为轻量级进程 ( Lightweight Process，LWP ），是程序执行流的最小单元。一个标准的线程由线程 ID ，当前指令指针 ( PC ），寄存器集合和堆栈组成。另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程自己不拥有系统资源，只拥有一点儿在运行中必不可少的资源，但它可与同属一个进程的其它线程共享进程所拥有的全部资源。一个线程可以创建和撤消另一个线程，同一进程中的多个线程之间可以并发执行。由于线程之间的相互制约，致使线程在运行中呈现出间断性。线程也有就绪、阻塞和运行三种基本状态。就绪状态是指线程具备运行的所有条件，逻辑上可以运行，在等待处理机；运行状态是指线程占有处理机正在运行；阻塞状态是指线程在等待一个事件（如某个信号量），逻辑上不可执行。每一个程序都至少有一个线程，若程序只有一个线程，那就是程序本身。
+有时被称为轻量级进程 ( Lightweight Process，LWP ），是程序执行流的最小单元。一个标准的线程由线程 ID ，当前指令指针 ( PC ），寄存器集合和堆栈组成。另外，线程是进程中的一个实体，是被系统独立调度和分派的基本单位，线程自己不拥有系统资源，只拥有一点儿在运行中必不可少的资源，但它可与同属一个进程的其它线程共享进程所拥有的全部资源。一个线程可以创建和撤消另一个线程，同一进程中的多个线程之间可以并发执行。由于线程之间的相互制约，致使线程在运行中呈现出间断性。线程也有就绪、阻塞和运行三种基本状态。就绪状态是指线程具备运行的所有条件，逻辑上可以运行，在等待处理机；运行状态是指线程占有处理机正在运行；阻塞状态是指线程在等待一个事件（如某个信号量），逻辑上不可执行。每一个程序都至少有一个线程，若程序只有一个线程，那就是程序本身。
 
 ## 线程并发简介
 
@@ -175,12 +174,11 @@ public class WaitNotiFy {
 
 ```
 ###### 输出内容：
-
-> flag is true
-
-> flag is false now
-
-> 条件满足
+```
+  > flag is true
+  > flag is false now
+  > 条件满足
+```
 
 ## 线程池 ThreadPool
 
@@ -370,20 +368,21 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 - **maximumPoolSize** 线程池最大线程数，这个参数也是一个非常重要的参数，它表示在线程池中最多能创建多少个线程。
 - **keepAliveTime** 表示线程没有任务执行时最多保持多久时间会终止。默认情况下，只有当线程池中的线程数大于 corePoolSize 时，keepAliveTime 才会起作用，直到线程池中的线程数不大于 corePoolSize ，即当线程池中的线程数大于 corePoolSize 时，如果一个线程空闲的时间达到 keepAliveTime ，则会终止，直到线程池中的线程数不超过 corePoolSize 。但是如果调用了 allowCoreThreadTimeOut(boolean) 方法，在线程池中的线程数不大于 corePoolSize 时，keepAliveTime 参数也会起作用，直到线程池中的线程数为 0 。
 - **unit** 参数 keepAliveTime 的时间单位，有 7 种取值，在 TimeUnit 类中有 7 种静态属性。
+```
+  > TimeUnit.DAYS;               //天
 
- > TimeUnit.DAYS;               //天
+  > TimeUnit.HOURS;             //小时
 
- >TimeUnit.HOURS;             //小时
+  > TimeUnit.MINUTES;           //分钟
 
- >TimeUnit.MINUTES;           //分钟
+  > TimeUnit.SECONDS;           //秒
 
- >TimeUnit.SECONDS;           //秒
+  > TimeUnit.MILLISECONDS;      //毫秒
 
- >TimeUnit.MILLISECONDS;      //毫秒
+  > TimeUnit.MICROSECONDS;      //微妙
 
- >TimeUnit.MICROSECONDS;      //微妙
-
- >TimeUnit.NANOSECONDS;       //纳秒
+  > TimeUnit.NANOSECONDS;       //纳秒
+ ```
 
 - **workQueue** 一个阻塞队列，用来存储等待执行的任务，这个参数的选择也很重要，会对线程池的运行过程产生重大影响，一般来说，这里的阻塞队列有以下几种选择。ArrayBlockingQueue 、LinkedBlockingQueue 、SynchronousQueue 。ArrayBlockingQueue 和 PriorityBlockingQueue 使用较少，一般使用 LinkedBlockingQueue 和 Synchronous 。线程池的排队策略与 BlockingQueue 有关。
 
@@ -711,16 +710,17 @@ public interface Executor {
 
 ###### 线程池状态
 在 ThreadPoolExecutor 中定义了一个 volatile 变量，另外定义了几个 static final 变量表示线程池的各个状态。
+```
+  >volatile int runState;
 
- >volatile int runState;
+  >static final int RUNNING    = 0;
 
- >static final int RUNNING    = 0;
+  >static final int SHUTDOWN   = 1;
 
- >static final int SHUTDOWN   = 1;
+  >static final int STOP       = 2;
 
- >static final int STOP       = 2;
-
- >static final int TERMINATED = 3;
+  >static final int TERMINATED = 3;
+ ```
 
  runState 表示当前线程池的状态，它是一个 volatile 变量用来保证线程之间的可见性,下面的几个 static final 变量表示 runState 可能的几个取值。当创建线程池后，初始时，线程池处于 RUNNING 状态。如果调用了 shutdown() 方法，则线程池处于 SHUTDOWN 状态，此时线程池不能够接受新的任务，它会等待所有任务执行完毕。如果调用了 shutdownNow() 方法，则线程池处于 STOP 状态，此时线程池不能接受新的任务，并且会去尝试终止正在执行的任务。当线程池处于 SHUTDOWN 或 STOP 状态，并且所有工作线程已经销毁，任务缓存队列已经清空或执行结束后，线程池被设置为 TERMINATED 状态。
 
@@ -907,6 +907,8 @@ public int prestartAllCoreThreads() {
 ###### 任务拒绝策略
 
 当线程池的任务缓存队列已满并且线程池中的线程数目达到 maximumPoolSize，如果还有任务到来就会采取任务拒绝策略，通常有以下四种策略。
+
+```
 >ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。
 
 >ThreadPoolExecutor.DiscardPolicy：也是丢弃任务，但是不抛出异常。
@@ -914,26 +916,29 @@ public int prestartAllCoreThreads() {
 >ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列最前面的任务，然后重新尝试执行任务（重复此过程）
 
 >ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务
-
+```
 
 
 ###### 线程池的关闭
 
 ThreadPoolExecutor 提供了两个方法，用于线程池的关闭，分别是 shutdown() 和 shutdownNow()，其中：
-
+```
 >shutdown()：不会立即终止线程池，而是要等所有任务缓存队列中的任务都执行完后才终止，但再也不会接受新的任务
 
 >shutdownNow()：立即终止线程池，并尝试打断正在执行的任务，并且清空任务缓存队列，返回尚未执行的任务
+```
 
 
 ###### 线程池容量的动态调整
 
 ThreadPoolExecutor 提供了动态调整线程池容量大小的方法：setCorePoolSize() 和 setMaximumPoolSize()。
 
+```
 >setCorePoolSize：设置核心池大小
 
 >setMaximumPoolSize：设置线程池最大能创建的线程数目大小
 
+```
 
 #### 使用示例
 
