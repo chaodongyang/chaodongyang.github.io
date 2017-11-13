@@ -1,6 +1,6 @@
 ---
 layout: post
-title: java 操作符详解
+title: java编程思想之操作符详解
 categories: javaThinking
 description: Java 操作符使用详解
 keywords: java, java操作符
