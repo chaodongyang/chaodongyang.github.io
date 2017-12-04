@@ -51,3 +51,87 @@ Exception in thread "main" java.lang.ArrayStoreException: wildcard.Orange
 ![](/images/blog/addException.png)
 
 我们看到 List<? extends fruit>，可以将其读作 “具有任何从 Fruit 继承的类型的列表 ” 。但是这并不意味着这个容器可以持有任何类型的 Fruit。因为通配符引用的是明确的类型。因此这个赋值的容器必须持有明确的类型。但是我们看到我们并不能向容器中添加任何类型的对象，甚至是它自己。因为我们并不知道它具体持有的是那种类型。因为编译器并不知道这个 List 可以合法的指向你传入的类型。一旦执行这种类型的向上转型，你就丢失掉向其传入任何对象的能力。另外，你看到如果调用一个返回 Fruit 的方法，则是安全的。因为我们知道这个容器的任何对象至少具有 Fruit 类型。
+
+#### 编译器有多聪明
+我们来看一下修改后的代码：
+```java
+public class NonCovar {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		List<? extends Fruit> list = Arrays.asList(new Apple());
+		Apple apple = (Apple)list.get(0);
+		list.contains(new Apple());
+		list.indexOf(new Apple());
+		System.out.println(list.contains(new Apple())+"");
+		System.out.println(list.indexOf(new Apple())+"");
+	}
+
+}
+```
+执行结果：
+```
+false
+-1
+
+```
+我们看到上面的两个方法可以正确的执行。这意味着编译器实际上进行了代码的检查。我们查看 ArrayList 的文档可以知道 contains() 和 indexOf() 实际传入的是 Object。而添加 Add() 方法实际传入的是泛型 T。add() 方法的参数就变成了 <? extends Fruit>。这里编译器就无法了解你到底传入的是那种具体类型，因此就不接受任何类型的 Fruit。
+
+#### 逆变
+还可以使用另外一个方式，那就是超类型通配符。这里，可以声明通配符是由某个特定类的任何基类来限定的，方法是指定 <? super MyClass>。甚至可以使用类型参数 <? super T>。
+```java
+public class SuperType {
+	public static void  writeTo(List<? super Apple> apples) {
+		apples.add(new Apple());
+		apples.add(new Jonathan());
+	}
+}
+```
+List 中的泛型指定的是参数 Apple 的某种基类，这样就知道向其添加元素的下界就是 Apple。既然知道了下界，那么添加 Apple 以及 Apple 的子类是安全的，相反添加的基类是不能的，因为无法确定是那种基类的类型。我们可以参考上面的例子，来思考一下一个泛型类型如何写入和一个泛型类型如何读取：来思考一下子类型和超类型边界。
+
+超类型边界放松了在可以向方法传递参数上的限制：
+
+```java
+public class GenericWriting {
+
+	static <T> void writeExact(List<T> list,T item){
+		list.add(item);
+	}
+
+	static <T> T writeExtendExact(List<? extends T> list,int x){
+		return list.get(x);
+	}
+
+	static <T> void writeWithExact(List<? super T> list,T item){
+		list.add(item);
+	}
+
+	static List<Apple> list = new ArrayList<>();
+	static List<Fruit> list2 = new ArrayList<>();
+
+	static void f(){
+		writeExact(list, new Apple());
+		//writeExact(list2, new Apple());// Error
+	}
+
+	static void f2(){
+		writeWithExact(list, new Apple());
+		writeWithExact(list2,new Apple());
+	}
+
+	static void f3(){
+		writeExtendExact(list,0);
+		writeExtendExact(list2,0);
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		f();
+		f2();
+		f3();
+	}
+
+}
+
+```
+上面的例子其实展示了这三种的关系。第一种方法使用的是确切类型 T。所以可以正确运行，但是不允许在 List<Fruit> 中添加一个 Apple。第二个方法使用的超类型边界，因此 List 将持有从 T 导出的类型。在第三个方法中我们看到其实就是上面我们讨论过的。它不允许向其添加任何类型的参数，但是可以正确的读取。
