@@ -184,3 +184,25 @@ public class UnboundedWildcards1 {
 看这个例子，事实上编译器也没有给出任何异常。事实上编译器并不关心你使用的是原生类型还是 <?>。<?> 号可以被看成是一种装饰，但是还是非常有用的。因为实际上他是在生命我是想用 Java 的泛型来编写代码，我在这里并不是想用原生类型。在当前这种情况下泛型参数可以持有任何类型。
 
 看下面这个例子：当我们处理多个泛型参数时，其中一个是任何类型，同事其他参数是某种特定的类型：
+
+```java
+public class UnboundedWildcards2 {
+
+	  static Map map1;
+	  static Map<?,?> map2;
+	  static Map<String,?> map3;
+	  static void assign1(Map map) { map1 = map; }
+	  static void assign2(Map<?,?> map) { map2 = map; }
+	  static void assign3(Map<String,?> map) { map3 = map; }
+	  public static void main(String[] args) {
+	    assign1(new HashMap());
+	    assign2(new HashMap());
+	    assign3(new HashMap()); // Warning:
+	    // Unchecked conversion. Found: HashMap
+	    // Required: Map<String,?>
+	    assign1(new HashMap<String,Integer>());
+	    assign2(new HashMap<String,Integer>());
+	    assign3(new HashMap<String,Integer>());
+	  }
+}
+```
