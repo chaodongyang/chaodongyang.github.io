@@ -135,3 +135,76 @@ public class GenericWriting {
 
 ```
 上面的例子其实展示了这三种的关系。第一种方法使用的是确切类型 T。所以可以正确运行，但是不允许在 List<Fruit> 中添加一个 Apple。第二个方法使用的超类型边界，因此 List 将持有从 T 导出的类型。在第三个方法中我们看到其实就是上面我们讨论过的。它不允许向其添加任何类型的参数，但是可以正确的读取。
+
+#### 无界通配符
+无界通配符 <?> 看起来意味着任何事物，因此使用无界通配符好像等价于使用原生类型。事实上，编译器初看起来是支持这种判断的。其实是不等价的。
+```java
+public class UnboundedWildcards1 {
+
+	  static List list1;
+	  static List<?> list2;
+	  static List<? extends Object> list3;
+
+	  static void assign1(List list) {
+	    list1 = list;
+	    list2 = list;
+	    list3 = list; // Warning: unchecked conversion
+	    // Found: List, Required: List<? extends Object>
+	  }
+	  static void assign2(List<?> list) {
+	    list1 = list;
+	    list2 = list;
+	    list3 = list;
+	  }
+	  static void assign3(List<? extends Object> list) {
+	    list1 = list;
+	    list2 = list;
+	    list3 = list;
+	  }
+	  public static void main(String[] args) {
+	    assign1(new ArrayList());
+	    assign2(new ArrayList());
+	    assign3(new ArrayList()); // Warning:
+	    // Unchecked conversion. Found: ArrayList
+	    // Required: List<? extends Object>
+	    assign1(new ArrayList<String>());
+	    assign2(new ArrayList<String>());
+	    assign3(new ArrayList<String>());
+	    // Both forms are acceptable as List<?>:
+	    List<?> wildList = new ArrayList();
+	    wildList = new ArrayList<String>();
+	    assign1(wildList);
+	    assign2(wildList);
+	    assign3(wildList);
+	  }
+}
+
+```
+看这个例子，事实上编译器也没有给出任何异常。事实上编译器并不关心你使用的是原生类型还是 <?>。<?> 号可以被看成是一种装饰，但是还是非常有用的。因为实际上他是在生命我是想用 Java 的泛型来编写代码，我在这里并不是想用原生类型。在当前这种情况下泛型参数可以持有任何类型。
+
+看下面这个例子：当我们处理多个泛型参数时，其中一个是任何类型，同事其他参数是某种特定的类型：
+
+```java
+public class UnboundedWildcards2 {
+
+	  static Map map1;
+	  static Map<?,?> map2;
+	  static Map<String,?> map3;
+	  static void assign1(Map map) { map1 = map; }
+	  static void assign2(Map<?,?> map) { map2 = map; }
+	  static void assign3(Map<String,?> map) { map3 = map; }
+	  public static void main(String[] args) {
+	    assign1(new HashMap());
+	    assign2(new HashMap());
+	    assign3(new HashMap()); // Warning:
+	    // Unchecked conversion. Found: HashMap
+	    // Required: Map<String,?>
+	    assign1(new HashMap<String,Integer>());
+	    assign2(new HashMap<String,Integer>());
+	    assign3(new HashMap<String,Integer>());
+	  }
+}
+```
+上面的例子会有一些警告，但是运行没有任何问题。我们看到当我们拥有的全是无界通配符的时候，编译器看起来好像无法与原生的 Map 进行区分。因此看起来好像是相同的事物。事实上，因为泛型参数将擦除到它的第一个边界，因此 List<?> 看起来等价于 List<Object>。而实际上 List 也是 List<Object>。而事实是：List 表示持有任何 Object 类型的原生 List。List<?> 表示具有某种特定类型的非原生 List，只是我们不知道它是什么类型。
+
+编译器何时才会关注原生类型和涉及无界通配符的类型之间的差异呢？
