@@ -207,4 +207,419 @@ public class UnboundedWildcards2 {
 }
 ```
 
-上面的例子会有一些警告，但是运行没有任何问题。我们看到当我们拥有的全是无界通配符的时候，编译器看起来好像无法与原生的 Map 进行区分。因此看起来好像是相同的事物。事实上，因为泛型参数将擦除到它的第一个边界，因此 ```List<?>``` 看起来等价于```List<Object>```。而实际上 List 也是 ```List<Object>```。而事实是：List 表示持有任何 Object 类型的原生 List。```List<?>``` 表示具有某种特定类型的非原生 List，只是我们不知
+上面的例子会有一些警告，但是运行没有任何问题。我们看到当我们拥有的全是无界通配符的时候，编译器看起来好像无法与原生的 Map 进行区分。因此看起来好像是相同的事物。事实上，因为泛型参数将擦除到它的第一个边界，因此 ```List<?>``` 看起来等价于```List<Object>```。而实际上 List 也是 ```List<Object>```。而事实是：List 表示持有任何 Object 类型的原生 List。```List<?>``` 表示具有某种特定类型的非原生 List，只是我们不知道它是什么类型。
+
+编译器何时才会关注原生类型和涉及无界通配符的类型之间的差异呢？
+
+```java
+public class Holder<T> {
+	  private T value;
+	  public Holder() {}
+	  public Holder(T val) { value = val; }
+
+	  public void set(T val) { value = val; }
+
+	  public T get() { return value; }
+
+	  public boolean equals(Object obj) {
+	    return value.equals(obj);
+	  }
+
+	  public static void main(String[] args) {
+	    Holder<Apple> Apple = new Holder<Apple>(new Apple());
+	    Apple d = Apple.get();
+	    Apple.set(d);
+	    // Holder<Fruit> Fruit = Apple; // Cannot upcast
+	    Holder<? extends Fruit> fruit = Apple; // OK
+	    Fruit p = fruit.get();
+	    d = (Apple)fruit.get(); // Returns 'Object'
+	    try {
+	      Orange c = (Orange)fruit.get(); // No warning
+	    } catch(Exception e) { System.out.println(e); }
+	    // fruit.set(new Apple()); // Cannot call set()
+	    // fruit.set(new Fruit()); // Cannot call set()
+	    System.out.println(fruit.equals(d)); // OK
+	  }
+}
+```
+实例代码：
+```java
+public class Wildcards {
+
+	static void rawArgs(Holder holder, Object arg) {
+	     holder.set(arg); // Warning:
+	    //   Unchecked call to set(T) as a
+	    //   member of the raw type Holder
+	    // holder.set(new Wildcards()); // Same warning
+
+	    // Can't do this; don't have any 'T':
+	    // T t = holder.get();
+
+	    // OK, but type information has been lost:
+	    Object obj = holder.get();
+	  }
+
+	  // Similar to rawArgs(), but errors instead of warnings:
+	  static void unboundedArg(Holder<?> holder, Object arg) {
+	    // holder.set(arg); // Error:
+	    //   set(capture of ?) in Holder<capture of ?>
+	    //   cannot be applied to (Object)
+	    // holder.set(new Wildcards()); // Same error
+
+	    // Can't do this; don't have any 'T':
+	     Object t = holder.get();
+
+	    // OK, but type information has been lost:
+	    Object obj = holder.get();
+	  }
+
+	  static <T> T exact1(Holder<T> holder) {
+	    T t = holder.get();
+	    return t;
+	  }
+
+	  static <T> T exact2(Holder<T> holder, T arg) {
+	    holder.set(arg);
+	    T t = holder.get();
+	    return t;
+	  }
+
+	  static <T> T wildSubtype(Holder<? extends T> holder, T arg) {
+	    // holder.set(arg); // Error:
+	    //   set(capture of ? extends T) in
+	    //   Holder<capture of ? extends T>
+	    //   cannot be applied to (T)
+	    T t = holder.get();
+	    return t;
+	  }
+
+	  static <T> void wildSupertype(Holder<? super T> holder, T arg) {
+	    holder.set(arg);
+	    // T t = holder.get();  // Error:
+	    //   Incompatible types: found Object, required T
+
+	    // OK, but type information has been lost:
+	    Object obj = holder.get();
+	  }
+
+
+	  public static void main(String[] args) {
+	    Holder raw = new Holder<Long>();
+	    // Or:
+	    raw = new Holder();
+	    Holder<Long> qualified = new Holder<Long>();
+	    Holder<?> unbounded = new Holder<Long>();
+	    Holder<? extends Long> bounded = new Holder<Long>();
+	    Long lng = 1L;
+
+	    //原生类型的对象可以将任何类型的对象传递进去，而这个对象将会被向上转型为Object
+	    rawArgs(raw, lng);
+	    rawArgs(qualified, lng);
+	    rawArgs(unbounded, lng);
+	    rawArgs(bounded, lng);
+
+	    //无界通配符虽然看起来和原生一样但是这里不能 set进一个对象，因为他持有的是具有同种类型的同构集合。这里还不能确定是那种类型
+	    unboundedArg(raw, lng);
+	    unboundedArg(qualified, lng);
+	    unboundedArg(unbounded, lng);
+	    unboundedArg(bounded, lng);
+
+	    Object r1 = exact1(raw); // Warnings:
+	    Long r2 = exact1(qualified);
+	    Object r3 = exact1(unbounded); // Must return Object
+	    Long r4 = exact1(bounded);
+
+	    // Long r5 = exact2(raw, lng); // Warnings:
+	    //   Unchecked conversion from Holder to Holder<Long>
+	    //   Unchecked method invocation: exact2(Holder<T>,T)
+	    //   is applied to (Holder,Long)
+	    Long r6 = exact2(qualified, lng);
+	     //Long r7 = exact2(unbounded, lng); // Error:
+	    //   exact2(Holder<T>,T) cannot be applied to
+	    //   (Holder<capture of ?>,Long)
+	    // Long r8 = exact2(bounded, lng); // Error:
+	    //   exact2(Holder<T>,T) cannot be applied
+	    //   to (Holder<capture of ? extends Long>,Long)
+
+	    // Long r9 = wildSubtype(raw, lng); // Warnings:
+	    //   Unchecked conversion from Holder
+	    //   to Holder<? extends Long>
+	    //   Unchecked method invocation:
+	    //   wildSubtype(Holder<? extends T>,T) is
+	    //   applied to (Holder,Long)
+	    Long r10 = wildSubtype(qualified, lng);
+	    // OK, but can only return Object:
+	    Object r11 = wildSubtype(unbounded, lng);
+	    Long r12 = wildSubtype(bounded, lng);
+
+	    // wildSupertype(raw, lng); // Warnings:
+	    //   Unchecked conversion from Holder
+	    //   to Holder<? super Long>
+	    //   Unchecked method invocation:
+	    //   wildSupertype(Holder<? super T>,T)
+	    //   is applied to (Holder,Long)
+	    wildSupertype(qualified, lng);
+	    // wildSupertype(unbounded, lng); // Error:
+	    //   wildSupertype(Holder<? super T>,T) cannot be
+	    //   applied to (Holder<capture of ?>,Long)
+	    // wildSupertype(bounded, lng); // Error:
+	    //   wildSupertype(Holder<? super T>,T) cannot be
+	    //  applied to (Holder<capture of ? extends Long>,Long)
+	  }
+}
+
+```
+经过上面的例子我们看到，Holder 和 Holder<?> 是不同的事物，Holder 将持有任何类型的组合，Holder<?> 将持有具有某种相同具体类型的组合。因此它也是不确定的，所以我们不能向其 set 任何类型。我们也不能将其作为一种类型传递给谁。但是我们可以使用 get。使用那种通配符取决于是否想要从泛型参数中返回类型确定的值，或者是否想要向泛型参数中传入类型确定的参数。
+
+因此，使用确切类型来替代通配符的好处是，可以用泛型参数做更多的事情，但是使用通配符你必须接受范围更宽的参数化类型作为参数。
+
+#### 捕获转换
+有一种情况特别需要使用 <?> 而不是原生类型。如果向一个使用 <?> 的方法传递原生类型，那么对于编译器来说，可能会推断出实际的参数类型，使得这个方法可以回转并调用另一个使用确切类型的方法。这种技术被称为：捕获转换，因为未指定的通配符类型被捕获，并被转换为确切的类型。
+
+```java
+public class CaptureConversion {
+
+	 static <T> void f1(Holder<T> holder) {
+	    T t = holder.get();
+	    System.out.println(t.getClass().getSimpleName());
+	  }
+
+	  static void f2(Holder<?> holder) {
+	    f1(holder); // Call with captured type
+	  }
+
+	  @SuppressWarnings("unchecked")
+	  public static void main(String[] args) {
+	    Holder raw = new Holder<Integer>(1);
+	    //f1(raw); // Produces warnings
+	    f2(raw); // No warnings
+	    Holder rawBasic = new Holder();
+	    rawBasic.set(new Object()); // Warning
+	    f2(rawBasic); // No warnings
+	    // Upcast to Holder<?>, still figures it out:
+	    Holder<?> wildcarded = new Holder<Double>(1.0);
+	    f2(wildcarded);
+	  }
+}
+
+```
+执行结果：
+```
+Integer
+Object
+Double
+```
+f1() 方法中的类型参数都是确定的，没有通配符或边界。在 f2() 中，Holder 参数是一个无界通配符，因此它看起来是未知的。但是，在 f2() 中 f1() 被调用，而 f1() 需要一个已知的参数。这里所发生的是：参数类型在调用 f2() 的过程中被捕获，因此它可以在对 f1() 的调用中被使用。
+
+你可能知道想这项技术是否可以用于写入，但是这要求在传递 Holder<?> 时同时传入一个具体的类型。捕获转换只有在这样的情况下才可以工作：即在方法内部，你需要使用确切的类型。捕获转换的使用非常有限。
+
+```java
+static <T> void f1(Holder<T> holder) {
+		 T t = holder.get();
+		 holder.set(t);
+		 System.out.println(holder.get().toString());
+	 }
+```
+执行结果：
+```
+1
+```
+通过转换我们可以set进去一个 T。实际上这个 T 是一个实际的类型。
+
+## 问题
+Java 泛型在使用中会出现各种各样的问题：
+
+#### 任何基本类型都不能作为类型参数
+第一个问题，不能将 Java 的基本类型作为类型参数。
+
+解决办法是使用其基本类型的包装器类型以及 JavaSE5 的自动包装机制。
+```java
+public class ListOfInt {
+
+	 public static void main(String[] args) {
+		    List<Integer> li = new ArrayList<Integer>();
+		    for(int i = 0; i < 5; i++)
+		      li.add(i);
+		    for(int i : li)
+		      System.out.print(i + " ");
+	 }
+
+}
+```
+执行结果：
+```
+0 1 2 3 4
+```
+这种解决方案工作的很好，但是如果比较看重性能问题，就需要使用专门适配基本类型的容器版本。
+```java
+Org.apache.commons.collections.primitives
+```
+```java
+class FArray {
+	  public static <T> T[] fill(T[] a, Generator<T> gen) {
+	    for(int i = 0; i < a.length; i++)
+	      a[i] = gen.next();
+	    return a;
+	  }
+}
+
+
+public class PrimitiveGenericTest {
+
+	public static void main(String[] args) {
+	    String[] strings = FArray.fill(
+	      new String[7], new RandomGenerator.String(10));
+	    for(String s : strings)
+	      System.out.println(s);
+	    Integer[] integers = FArray.fill(
+	      new Integer[7], new RandomGenerator.Integer());
+	    for(int i: integers)
+	      System.out.println(i);
+	    // Autoboxing won't save you here. This won't compile:
+	    // int[] b =
+	    //   FArray.fill(new int[7], new RandIntGenerator());
+	  }
+
+}
+```
+有了自动包装机制，我们希望 gen.next() 的值从 Integer 转换为 int。但是，自动包装机制不能应用于数组，因此无法工作。
+
+#### 实现参数化接口
+一个类不能实现同一个泛型接口的两种变体，由于擦除的原因，这两个变体会指向同一个接口，也就是会产生冲突。
+```java
+public interface Payable<T> {
+
+}
+```
+子类：
+```java
+public class Employee implements Payable<Employee>{
+
+}
+```
+同时去实现上边的两个类：
+```java
+public class Hourly extends Employee implements Payable<Hourly>{
+
+}
+
+```
+Hourly 将不能够编译，因为擦除机制会把 Payable<Employee> 和 Payable<Hourly> 简化为相同的类 Payable。这样就以为这你在重复的去实现同样的接口。从两种方法中都移除掉泛化参数就可以编译。
+
+#### 转型和警告
+使用泛型类型的参数进行的转型或 instanceof 不会有任何效果：
+```java
+public class FixedSizeStack<T> {
+	 private int index = 0;
+	  private Object[] storage;
+	  public FixedSizeStack(int size) {
+	    storage = new Object[size];
+	  }
+	  public void push(T item) { storage[index++] = item; }
+	  //这里的转型是没有任何意义的，因为 T 会被擦除为 Object
+	  @SuppressWarnings("unchecked")
+	  public T pop() { return (T)storage[--index]; }
+}
+
+```
+调用：
+```java
+public class GenericCast {
+
+	public static final int SIZE = 10;
+	  public static void main(String[] args) {
+	    FixedSizeStack<String> strings =
+	      new FixedSizeStack<String>(SIZE);
+	    for(String s : "A B C D E F G H I J".split(" "))
+	      strings.push(s);
+	    for(int i = 0; i < SIZE; i++) {
+	      String s = strings.pop();
+	      System.out.print(s + " ");
+	    }
+	  }
+
+}
+
+```
+执行结果：
+```
+J I H G F E D C B A
+```
+虽然运行成功了，但是 pop() 方法中的转型是没有意义的，因为编译器无法知道这个转型是否是安全的。擦除将会把 T 变为 Object。因此上边的做法实际上是将 Object 转型为 Object。
+
+泛型没有消除对转型的需要：
+```java
+public class NeedCasting {
+	//@SuppressWarnings("unchecked")
+	  public void f(String[] args) throws Exception {
+	    ObjectInputStream in = new ObjectInputStream(
+	      new FileInputStream(args[0]));
+	    //in.readObject() 无法知道我们正在读取什么，因此它返回的必须是转型的对象。
+	    List<Apple> shapes = (List<Apple>)in.readObject();
+	  }
+}
+```
+其实上边的例子我们被强制要求转型，但是似乎又不该转型，因为不知道下一个读取的是什么内容。为了解决这个问题，JavaSE5 中引入了新的转型方式。即通过泛型类来解决。
+```java
+public class NeedCasting {
+	 @SuppressWarnings("unchecked")
+	  public void f(String[] args) throws Exception {
+	    ObjectInputStream in = new ObjectInputStream(
+	      new FileInputStream(args[0]));
+	    List<Apple> shapes = List.class.cast(in.readObject());
+	  }
+}
+
+```
+按照上面的办法虽然不用强制类型转换了，但是依然无法转型到实际的类型。去掉注释之后，警告依然存在：
+```java
+ List<Apple> shapes = (List<Apple>)List.class.cast(in.readObject());
+```
+这样也不行，警告还是会存在。
+
+#### 重载
+我们看下面的程序：
+```java
+public class UseList<W,T> {
+	 void f(List<T> v) {}
+	  void f(List<W> v) {}
+}
+
+```
+这个程序是不能编译的，由于擦除的原因，你将得到相同的两个方法。
+
+解决办法，当参数由于擦除不能产生不同的参数列表时，必须提供不同的方法名：
+```java
+public class UseList<W,T> {
+	 void f1(List<T> v) {}
+	  void f2(List<W> v) {}
+}
+
+```
+#### 基类劫持接口
+看下面的接口：
+```java
+public interface Comparable<T> {
+
+}
+```
+实现这个接口：
+```java
+public class ComparablePet implements Comparable<ComparablePet> {
+	  public int compareTo(ComparablePet arg) { return 0; }
+}
+
+```
+看下面的代码：
+```java
+public class Cat extends ComparablePet implements Comparable<Cat>{
+
+}
+```
+不能够编译，还记得刚才的一个类不同重复实现相同的泛化类型的接口吗？还有一个原因是：一旦为 Comparable 确定了参数，那么就不能再更改为其他的类型参数。我们修改下面的代码：
+```java
+public class Cat extends ComparablePet implements Comparable<ComparablePet>{
+
+}
+```
+这样就可以编译了，说明 ComparablePet 中的相同的接口是可能的，只要他们精确的相同。
