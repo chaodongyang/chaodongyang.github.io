@@ -235,7 +235,7 @@ public class LinkedStack<T> {
 ```
 ner oug gnohz ihs nem ow
 ```
-这个例子使用了末端哨兵来判断堆栈何时为空。这个末端哨兵在构造 LinkedStack 的时候创建。然后每次调用一次 push() 方法，就会创建一个 Node<T> 的对象，并将其连接到前一个对象。当你调用 pop() 方法时，总会返回 top.item。然后对其当前 top 所指的 Node<T> 。并将 top 转移到下一个 Node<T>。除非你碰到末端哨兵。这个时候就不在移动了。如果到了末端客户端程序还会调用 pop() 方法。它只能得到 null，说明堆栈已经是空。
+这个例子使用了末端哨兵来判断堆栈何时为空。这个末端哨兵在构造 LinkedStack 的时候创建。然后每次调用一次 push() 方法，就会创建一个 ```Node<T>``` 的对象，并将其连接到前一个对象。当你调用 pop() 方法时，总会返回 top.item。然后对其当前 top 所指的 ```Node<T>``` 。并将 top 转移到下一个 ```Node<T>```。除非你碰到末端哨兵。这个时候就不在移动了。如果到了末端客户端程序还会调用 pop() 方法。它只能得到 null，说明堆栈已经是空。
 
 #### RandomList
 假设我们需要一个持有特定类型对象的列表，每次调用其上的 select() 方法，他可以随机的选取一个元素。如果我们需要构建的是应用于各种类型的工具，就需要泛型。
@@ -829,4 +829,4 @@ Teller2  Customer13
 Teller1  Customer14
 Teller1  Customer15
 ```
-Customer 和 Teller 类都只有 private 的构造器，这可以强制你必须使用 Generator 对象。Customer 有一个 generator() 方法，每次执行它都会生成一个新的 Generator<Customer> 对象。我们其实不需要多个 Generator 对象，Teller 就只创建了一个 public 的 generator 对象。
+Customer 和 Teller 类都只有 private 的构造器，这可以强制你必须使用 Generator 对象。Customer 有一个 generator() 方法，每次执行它都会生成一个新的 ```Generator<Customer>``` 对象。我们其实不需要多个 Generator 对象，Teller 就只创建了一个 public 的 generator 对象。

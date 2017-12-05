@@ -50,7 +50,7 @@ public class Erased {
 ```
 true
 ```
-我们看到 ArrayList<String> 和 ArrayList<Integer> 很容易被认为是不同的类型。不同的类型在行为方面肯定是不同的。但是上面的程序却认为他们是相同的类型。
+我们看到 ```ArrayList<String>``` 和 ```ArrayList<Integer>``` 很容易被认为是不同的类型。不同的类型在行为方面肯定是不同的。但是上面的程序却认为他们是相同的类型。
 
 下面的示例是对上个谜题的补充：
 ```java
@@ -75,7 +75,7 @@ public class LostInfo {
 ```
 根据 JDK 文档得知 getTypeParameters 得到的是泛型所有生命的类型参数。但是，正如所输出的哪样看到，你能发现的只是用作参数占位符的标识符，这是一下没有用的信息。因此，得到的结论是：在泛型代码内部，无法获得任何有关泛型参数类型的信息。
 
-Java 泛型是使用擦除来实现的，这意味着当你使用泛型时，任何具体的类型信息都将被擦除。你唯一知道的就是你在使用一个对象。因此 List<String> 和 List<Integer> 在运行时事实上是相同的类型。这两种形式事实上都被擦除为他们的原生类型，即 List。
+Java 泛型是使用擦除来实现的，这意味着当你使用泛型时，任何具体的类型信息都将被擦除。你唯一知道的就是你在使用一个对象。因此 ```List<String>``` 和 ```List<Integer>``` 在运行时事实上是相同的类型。这两种形式事实上都被擦除为他们的原生类型，即 List。
 
 #### C++ 的方式
 下面来看一段使用 C++ 的模板：
@@ -128,7 +128,7 @@ class Manipulator2<T extends HasF> {
   public void manipulate() { obj.f(); }
 }
 ```
-边界 <T extends HasF> 声明 T 必须具备有类型 HasF 或者 HasF 导出的类型。那么我们才可以安全的使用 obj.f()。我们说泛型类型参数将擦除到它的第一个边界，我们还提到类型参数的擦除。编译器实际上会把类型参数替换为它的擦除，就像上面的示例一样。T 擦除到了 HasF。
+边界 ```<T extends HasF>``` 声明 T 必须具备有类型 HasF 或者 HasF 导出的类型。那么我们才可以安全的使用 obj.f()。我们说泛型类型参数将擦除到它的第一个边界，我们还提到类型参数的擦除。编译器实际上会把类型参数替换为它的擦除，就像上面的示例一样。T 擦除到了 HasF。
 
 实际上我们也可以自己去擦除，就可以创建出没有泛型的类：
 ```java
@@ -237,7 +237,7 @@ public class ArrayMaker<T> {
 ```
 [null, null, null, null, null, null, null, null, null]
 ```
-即使 kind 被存储为 Class<T>，擦除也意味着它实际将被存储为 Class，没有任何参数。例如，创建数组时，因为不会产生任何结果，编译器会给我们一个警告。
+即使 kind 被存储为 ```Class<T>```，擦除也意味着它实际将被存储为 Class，没有任何参数。例如，创建数组时，因为不会产生任何结果，编译器会给我们一个警告。
 
 如果我们要创建一个容器，而不是数组：
 
@@ -256,7 +256,7 @@ public class ListMaker<T> {
 }
 
 ```
-不会输出任何的结果，编译器也不会发出任何警告，尽管我们知道 new ArrayList<T> 的 T 将会被移除，在运行时，这个类的内部没有任何 T ，因此看起来毫无意义。但是如果我们将表达式修改为 new ArrayList()，编译器就会警告。
+不会输出任何的结果，编译器也不会发出任何警告，尽管我们知道 ```new ArrayList<T>``` 的 T 将会被移除，在运行时，这个类的内部没有任何 T ，因此看起来毫无意义。但是如果我们将表达式修改为 new ArrayList()，编译器就会警告。
 
 如果我们在返回 List 之前，将某些对象放入其中，就像下面这样。
 
@@ -574,7 +574,7 @@ public class ArrayOfGeneric {
 Exception in thread "main" java.lang.ClassCastException: [Ljava.lang.Object; cannot be cast to [Lgenericity.Generic;
 	at genericity.ArrayOfGeneric.main(ArrayOfGeneric.java:10)
 ```
-理论上数组都具有相同的结构，我们创建一个 Object 的数组，并将其转型为所希望的数组类型。可以编译却不能运行。问题在于数组会跟踪他们的实际类型，而这个类型是在数组被创建事就确立的。即使上边已经被转型为 Generic<Integer> 数组，但是只存在编译器。在运行时它仍旧是 Object 数组。
+理论上数组都具有相同的结构，我们创建一个 Object 的数组，并将其转型为所希望的数组类型。可以编译却不能运行。问题在于数组会跟踪他们的实际类型，而这个类型是在数组被创建事就确立的。即使上边已经被转型为 ```Generic<Integer>``` 数组，但是只存在编译器。在运行时它仍旧是 Object 数组。
 
 成功创建一个泛型数组的唯一方式就是创建一个擦除类型的新数组。然后对其转型：
 
