@@ -31,7 +31,7 @@ chao-47
 chao-47
 ```
 ## 擦除的神秘之处
-当我们深入的钻研泛型的时候，会看到很多东西初看起来是没有意义的。例如，我们可以声明一个 ArrayList.class，但是不能声明 ArrayList<Integer>.class。
+当我们深入的钻研泛型的时候，会看到很多东西初看起来是没有意义的。例如，我们可以声明一个 ArrayList.class，但是不能声明 ```ArrayList<Integer>.class```。
 ```java
 public class Erased {
 
