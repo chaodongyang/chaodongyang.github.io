@@ -205,19 +205,21 @@ public class IceCream {
 
 ## 多维数组
 创建多维数组很方便。对于基本类型的多维数组，可以通过使用花括号将每个向量分隔开：
-{% raw %}
+```java
 public class Multidimens {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[][] a = {{1,2,3},{4,5,6}};
+		int[][] a = {
+			       {1,2,3},{4,5,6}
+		            };
 		//Arrays.deepToString(a)可以把多个数组转换为多个String
 		System.out.println(Arrays.deepToString(a));
 	}
 
 }
-{% endraw %}
 
+```
 每个花括号括起来的集合都会把你带到下一个集合。
 
 还可以使用 new 来分配数组，下面看一个三维数组的例子：
