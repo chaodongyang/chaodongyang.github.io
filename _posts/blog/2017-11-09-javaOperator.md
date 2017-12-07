@@ -213,7 +213,7 @@ public static void main(String[] args) {
 		System.out.println("i!=j=:" + (i!=j));
 
 		System.out.println("i > 10 && j >10 =:" + ((i>10) && (j>10)));
-		System.out.println("i < 10 || j <10 =:" + ((i>10) || (j>10)));
+		System.out.println("i > 10 || j >10 =:" + ((i>10) || (j>10)));
 
 	}
 ```
@@ -228,7 +228,7 @@ i<=j=:false
 i==j=:false
 i!=j=:true
 i > 10 && j >10 =:true
-i < 10 || j <10 =:true
+i > 10 || j >10 =:true
 
 ```
 “与” 、"或" 、“非” 只可用于 boolean 值，不可直接用于基本类型。
