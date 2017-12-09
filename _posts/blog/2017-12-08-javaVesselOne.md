@@ -1,6 +1,6 @@
 ---
 layout: post
-title: java编程思想之容器深入研究一
+title: java编程思想之容器深入研究初解
 categories: javaThinking
 description: java编程思想之容器深入研究
 keywords: java, java容器深入研究, 容器，java容器详解
