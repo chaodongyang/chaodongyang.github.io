@@ -297,7 +297,9 @@ public class Lists {
 - HashSet： 查找速度快，存入的元素必须实现 hashCode()
 - ThreeSet：保持次序的 Set 底层为树结构。使用它可以从 Set 中提取有序列的数据。元素必须实现 Comparable 接口。
 - LinkedHashSet： 具有 HashSet 的查询速度，内部使用链表维护元素的顺序。元素也必须实现 hashCode() 方法。
+
 *****************
+
 对于良好的代码风格，我们应该在覆盖 equals() 方法时，总是同时去覆盖 hashCode()。
 
 下面例子演示了为了成功的使用特定的 Set 实现类型而必须定义的方法：
@@ -715,6 +717,7 @@ sun : warmdancing
 - WeakHashMap：弱键影射，允许释放影射所指的对象；这是为解决某类特殊问题而设计的。可以被垃圾回收器回收。
 - ConcurrentHashMap：一种线程安全的 Map，它不涉及同步加锁。
 - IdentityHashMap：使用 == 代替 equals() 对键进行比较的散列映射。
+
 ***************
 
 对 Map 中使用键的要求和 Set 是一样的，任何键都必须有一个 equals() 方法；如果键被用于散列 Map，那么他还必须具有恰当的 hashCode() 方法；如果键被用于 TreeMap,那么它必须实现 Comparable 接口。
