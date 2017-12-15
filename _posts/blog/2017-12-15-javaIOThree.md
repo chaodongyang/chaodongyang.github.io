@@ -96,7 +96,7 @@ public class ChannelCopy {
 }
 
  ```
- #### 转换数据
+#### 转换数据
  上面的例子可以看出，为了读取文件中信息，我们每次只读取一个字节的数据，然后将每个 byte 类型强制转换为 char。如果我们查看一个 java.nio.CharBuffer 这个类，将会发现它有一个 toString() 方法是这样定义的：返回一个包含缓冲器中所有字符的字符串。既然 ByteBuffer 可以看做是具有 asCharBuffer() 方法的 CharBuffer，那么为什么不用他呢？
  ```java
  public class BufferToText {
@@ -406,13 +406,13 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
    <td height="28" style='height:14.00pt;' x:str>doubles</td>
    <td class="xl66" colspan="8" style='border-right:none;border-bottom:none;' x:str>4.8E-322</td>
   </tr>
- </table>
- ** 字节存放次序 **
+</table>
+** 字节存放次序 **
 
- 不同的机器可能采用不同的字节排序方式来存放数据。“big endian” 高位优先将最重要的字节存放在地址最低的存储单元。而 “little endian” 低位优先则是将最重要的字节存放在地址最高的存放单元。当存储了大于一个字节时，像 int、float 等，就要考虑字节的顺序问题了。ByteBuffer 是以高位优先的形式存储数据的，数据在网上传送时也常常采用高位优先的形式。我们可以使用带参数的 ByteOrder.BIG_ENDIAN 或 ByteOrder.LITTLE_ENDIAN 的 order() 方法改变 ByteBuffer 的字节排序方式。
+不同的机器可能采用不同的字节排序方式来存放数据。“big endian” 高位优先将最重要的字节存放在地址最低的存储单元。而 “little endian” 低位优先则是将最重要的字节存放在地址最高的存放单元。当存储了大于一个字节时，像 int、float 等，就要考虑字节的顺序问题了。ByteBuffer 是以高位优先的形式存储数据的，数据在网上传送时也常常采用高位优先的形式。我们可以使用带参数的 ByteOrder.BIG_ENDIAN 或 ByteOrder.LITTLE_ENDIAN 的 order() 方法改变 ByteBuffer 的字节排序方式。
 
- 看下面的两个字节的排序方式：
- <table width="1536" border="0" cellpadding="0" cellspacing="0" style='width:768.00pt;border-collapse:collapse;table-layout:fixed;'>
+看下面的两个字节的排序方式：
+<table width="1536" border="0" cellpadding="0" cellspacing="0" style='width:768.00pt;border-collapse:collapse;table-layout:fixed;'>
    <col width="96" span="16" style='width:48.00pt;'/>
    <tr height="28" style='height:14.00pt;'>
     <td height="28" width="96" align="right" style='height:14.00pt;width:48.00pt;' x:num>0</td>
@@ -437,12 +437,12 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
     <td class="xl65" colspan="8" style='border-right:none;border-bottom:none;' x:str>b2</td>
    </tr>
 
-  </table>
+</table>
 
-  如果我们以 short(ByteBuffer.asShortBuffer()) 读取数据，得到的数字是 97(二进制形式 00000000 01100001)；但是如果改为低位优先的形式，仍然以 short 形式读出来，得到的数字是 24832 (二进制形式 01100001 00000000)。
+如果我们以 short(ByteBuffer.asShortBuffer()) 读取数据，得到的数字是 97(二进制形式 00000000 01100001)；但是如果改为低位优先的形式，仍然以 short 形式读出来，得到的数字是 24832 (二进制形式 01100001 00000000)。
 
-  示例：改变字节存放模式来改变字符中的字节顺序：
-  ```java
+示例：改变字节存放模式来改变字符中的字节顺序：
+```java
   public class Endians {
 
 	public static void main(String[] args) {
@@ -464,17 +464,17 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
 
   }
 
-  ```
-  ByteBuffer 有足够的空间来存储作为外部缓冲器的 charArray 中的所有字节，因此可以调用 array() 方法显示视图底层的字节。array() 方法是可选的，并且只能对由数组支持的缓冲器调用此方法；否则将会抛出 UnsupportedOperationException。在底层的字节显示时我们发现随着高低位优先次序的相反，字节的顺序也交换了。
+```
+ByteBuffer 有足够的空间来存储作为外部缓冲器的 charArray 中的所有字节，因此可以调用 array() 方法显示视图底层的字节。array() 方法是可选的，并且只能对由数组支持的缓冲器调用此方法；否则将会抛出 UnsupportedOperationException。在底层的字节显示时我们发现随着高低位优先次序的相反，字节的顺序也交换了。
 
-  #### 用缓冲器操纵数据
-  我们想把一个字节数组写入到文件中，那么就应该使用 ByteBuffer.wrap() 方法把字节数组包装起来，然后用 getChannel() 方法在 FileOutputStream 上打开一个通道，接着将来自于 ByteBuffer 的数据写到 FileChannel 中。注意：ByteBuffer 是将数据移进移出通道的唯一方式，并且我们只能创建一个独立的基本类型缓冲器，或者使用 “as” 方法从 ByteBuffer 中获得。
+#### 用缓冲器操纵数据
+我们想把一个字节数组写入到文件中，那么就应该使用 ByteBuffer.wrap() 方法把字节数组包装起来，然后用 getChannel() 方法在 FileOutputStream 上打开一个通道，接着将来自于 ByteBuffer 的数据写到 FileChannel 中。注意：ByteBuffer 是将数据移进移出通道的唯一方式，并且我们只能创建一个独立的基本类型缓冲器，或者使用 “as” 方法从 ByteBuffer 中获得。
 
-  #### 缓冲器的细节
-  Buffer 由数据和可以高效的访问以及操作这些数据的四个索引组成，这四个索引是：mark (标记)、position (位置)、limit (界限) 和 capacity (容量)。还有一些具体的方法请查看 JDK 的文档。
+#### 缓冲器的细节
+Buffer 由数据和可以高效的访问以及操作这些数据的四个索引组成，这四个索引是：mark (标记)、position (位置)、limit (界限) 和 capacity (容量)。还有一些具体的方法请查看 JDK 的文档。
 
-  在缓冲器中插入和提取数据的方法会更新索引，用于反应所发生的变化。下面的示例用一个简单的算法：交换相邻的字符。对 CharBuffer 中的字符进行编码和译码。
-  ```java
+在缓冲器中插入和提取数据的方法会更新索引，用于反应所发生的变化。下面的示例用一个简单的算法：交换相邻的字符。对 CharBuffer 中的字符进行编码和译码。
+```java
   public class UsingBuffers {
 	private static void symmetricScramble(CharBuffer buffer){
 	    while(buffer.hasRemaining()) {
@@ -499,18 +499,18 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
 	  }
 }
 
-  ```
-  测试结果：
-  ```
-  UsingBuffers
-  sUniBgfuefsr
-  UsingBuffers
-  ```
- 尽管可以通过对某个 char 数组调用 warp() 方法直接产生一个 CharBuffer，但是我们在例子中是分配一个底层的 ByteBuffer，产生的 CharBuffer 只是 ByteBuffer 的一个视图而已。这里要强调的是，我们总是以操纵 ByteBuffer 为目标，因为他可以和通道交互。
+```
+测试结果：
+```
+UsingBuffers
+sUniBgfuefsr
+UsingBuffers
+```
+尽管可以通过对某个 char 数组调用 warp() 方法直接产生一个 CharBuffer，但是我们在例子中是分配一个底层的 ByteBuffer，产生的 CharBuffer 只是 ByteBuffer 的一个视图而已。这里要强调的是，我们总是以操纵 ByteBuffer 为目标，因为他可以和通道交互。
 
- #### 内存映射文件
- 内存映射文件允许我们创建和修改那些因为太大而不能放入内存的文件。有了内存映射文件，我们就可以假定整个文件都放在内存中，而且可以完全把他当做非常大的数组来访问。这种方法极大的简化了修改文件的代码。
- ```java
+#### 内存映射文件
+内存映射文件允许我们创建和修改那些因为太大而不能放入内存的文件。有了内存映射文件，我们就可以假定整个文件都放在内存中，而且可以完全把他当做非常大的数组来访问。这种方法极大的简化了修改文件的代码。
+```java
  public class LargeMappedFiles {
 	static int length = 0x8FFFFFF; // 128 MB
 	  public static void main(String[] args) throws Exception {
@@ -525,18 +525,18 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
 	  }
 }
 
- ```
- 测试结果：
- ```
+```
+测试结果：
+```
  Finished writing
  xxxxxx
- ```
- MappedByteBuffer 继承了 ByteBuffer。因此它具有 ByteBuffer 的所有的方法。前面的程序创建的文件为 128M，这比操作系统一次允许载入的内存大。但是似乎我们可以一次访问到所有文件，因为只有一部分文件放入了内存，文件的其他部分被交换了出去。注意：底层操作系统的文件映射工具是用来最大化的提高性能。
+```
+MappedByteBuffer 继承了 ByteBuffer。因此它具有 ByteBuffer 的所有的方法。前面的程序创建的文件为 128M，这比操作系统一次允许载入的内存大。但是似乎我们可以一次访问到所有文件，因为只有一部分文件放入了内存，文件的其他部分被交换了出去。注意：底层操作系统的文件映射工具是用来最大化的提高性能。
 
- ** 性能 **
+** 性能 **
 
- 尽管旧的 I/O 流在用 nio 实现后性能有所提高，但是 “映射文件访问” 往往可以更加显著的提高速度。下面的程序进行了简单的性能比较
- ```java
+尽管旧的 I/O 流在用 nio 实现后性能有所提高，但是 “映射文件访问” 往往可以更加显著的提高速度。下面的程序进行了简单的性能比较
+```java
  public class MappedIO {
 	  private static int numOfInts = 4000000;
 	  private static int numOfUbuffInts = 200000;
@@ -634,23 +634,23 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
 	  }
 }
 
- ```
- 测试结果：
- ```
- Stream Write: 0.28
- Mapped Write: 0.02
- Stream Read: 0.43
- Mapped Read: 0.01
- Stream Read/Write: 3.24
- Mapped Read/Write: 0.01
- ```
- test() 包含初始化各种 I/O 对象的时间，因此，即使建立映射文件的花费很大，但是整体收益比起 I/O 流来说还是很显著的。
+```
+测试结果：
+```
+Stream Write: 0.28
+Mapped Write: 0.02
+Stream Read: 0.43
+Mapped Read: 0.01
+Stream Read/Write: 3.24
+Mapped Read/Write: 0.01
+```
+test() 包含初始化各种 I/O 对象的时间，因此，即使建立映射文件的花费很大，但是整体收益比起 I/O 流来说还是很显著的。
 
- #### 文件加锁
- JDK 1.4 引入了文件加锁的机制，它允许我们同步访问某个文件作为共享资源的文件。不过，竞争同一文件的两个线程可能在不同的 Java 虚拟机上；或者一个是 Java 线程，另一个是操作系统中的某个本地线程。文件加锁对操作系统进程是可见的，因为 Java 的文件加锁直接映射到操作系统的加锁工具。
+#### 文件加锁
+JDK 1.4 引入了文件加锁的机制，它允许我们同步访问某个文件作为共享资源的文件。不过，竞争同一文件的两个线程可能在不同的 Java 虚拟机上；或者一个是 Java 线程，另一个是操作系统中的某个本地线程。文件加锁对操作系统进程是可见的，因为 Java 的文件加锁直接映射到操作系统的加锁工具。
 
- 下面是一个文件加锁的简单示例：
- ```java
+下面是一个文件加锁的简单示例：
+```java
  public class FileLocking {
 
 	public static void main(String[] args) throws Exception{
@@ -668,32 +668,32 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
 
 }
 
- ```
- 测试结果：
- ```
- 加锁文件
- 解锁
- ```
- 通过对 FileChannel 调用 tryLock() 或者 lock()，就可以获得整个文件的 FileLock。tryLock() 是非阻塞式的，它设法获取锁，但是如果不能获取将直接从方法调用处返回。lock() 则是阻塞式的，他要阻塞进程直至锁可以获得，或调用 lock() 的线程中断，或调用 lock() 的通道关闭。使用 FileLock.release() 可以释放锁。
+```
+测试结果：
+```
+加锁文件
+解锁
+```
+通过对 FileChannel 调用 tryLock() 或者 lock()，就可以获得整个文件的 FileLock。tryLock() 是非阻塞式的，它设法获取锁，但是如果不能获取将直接从方法调用处返回。lock() 则是阻塞式的，他要阻塞进程直至锁可以获得，或调用 lock() 的线程中断，或调用 lock() 的通道关闭。使用 FileLock.release() 可以释放锁。
 
- 也可以使用如下方法对文件的一部分上锁：
- ```java
+也可以使用如下方法对文件的一部分上锁：
+```java
  tryLock(long position,long size,boolean shard)
- ```
- 或者：
- ```java
- lock(long position,long size,boolean shard)
- ```
- 其中加锁的区域是由 position 和 size 决定的。第三个参数指定是否共享锁。
+```
+或者：
+```java
+lock(long position,long size,boolean shard)
+```
+其中加锁的区域是由 position 和 size 决定的。第三个参数指定是否共享锁。
 
- 无参数的加锁方法会根据文件的大小变化而变化，但是具有固定尺寸的锁不会随着文件的大小变化。无参数的加锁方式是对整个文件进行加锁。对独占锁或者共享锁需要操作系统底层的支持。如果操作系统不支持共享锁，那么会为每一个请求创建一个锁，那么就会成为独占锁。锁的类型可以通过 FileLock.isShared() 进行查询。
+无参数的加锁方法会根据文件的大小变化而变化，但是具有固定尺寸的锁不会随着文件的大小变化。无参数的加锁方式是对整个文件进行加锁。对独占锁或者共享锁需要操作系统底层的支持。如果操作系统不支持共享锁，那么会为每一个请求创建一个锁，那么就会成为独占锁。锁的类型可以通过 FileLock.isShared() 进行查询。
 
- ** 映射文件的部分加锁 **
+** 映射文件的部分加锁 **
 
- 文件映射通常应用于极大的文件。我们可能需要对这种巨大的文件进行部分加锁，一遍其他进程可以修改文件中未被加锁的部分。例如：数据库就是这样，因此多个用户可以同时访问他。
+文件映射通常应用于极大的文件。我们可能需要对这种巨大的文件进行部分加锁，一遍其他进程可以修改文件中未被加锁的部分。例如：数据库就是这样，因此多个用户可以同时访问他。
 
- 下面例子两个线程，分别加锁文件的不同部分。
- ```java
+下面例子两个线程，分别加锁文件的不同部分。
+```java
  public class LockingMappedFiles {
 	static final int LENGTH = 0x8FFFFFF; // 128 MB
 	  static FileChannel fc;
@@ -733,12 +733,12 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
 	  }
 }
 
- ```
- 测试结果：
- ```
- Locked: 75497471 to 113246206
- Locked: 0 to 50331647
- Released: 75497471 to 113246206
- Released: 0 to 50331647
- ```
- 线程类创建了缓冲区和用于修改的 slice()，然后在 run() 中获得文件通道上的锁。我们不能获得缓冲器上的锁，只能是通道上的。lock() 类似于获得一个对象的线程锁，即对该部分文件具有独占访问权。
+```
+测试结果：
+```
+Locked: 75497471 to 113246206
+Locked: 0 to 50331647
+Released: 75497471 to 113246206
+Released: 0 to 50331647
+```
+线程类创建了缓冲区和用于修改的 slice()，然后在 run() 中获得文件通道上的锁。我们不能获得缓冲器上的锁，只能是通道上的。lock() 类似于获得一个对象的线程锁，即对该部分文件具有独占访问权。
