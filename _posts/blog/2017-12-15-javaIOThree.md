@@ -407,7 +407,7 @@ ByteBuffer 通过一个被包装的 8 字节数组产生，然后通过各种不
    <td class="xl66" colspan="8" style='border-right:none;border-bottom:none;' x:str>4.8E-322</td>
   </tr>
 </table>
-** 字节存放次序 **
+**字节存放次序**
 
 不同的机器可能采用不同的字节排序方式来存放数据。“big endian” 高位优先将最重要的字节存放在地址最低的存储单元。而 “little endian” 低位优先则是将最重要的字节存放在地址最高的存放单元。当存储了大于一个字节时，像 int、float 等，就要考虑字节的顺序问题了。ByteBuffer 是以高位优先的形式存储数据的，数据在网上传送时也常常采用高位优先的形式。我们可以使用带参数的 ByteOrder.BIG_ENDIAN 或 ByteOrder.LITTLE_ENDIAN 的 order() 方法改变 ByteBuffer 的字节排序方式。
 
@@ -533,7 +533,7 @@ UsingBuffers
 ```
 MappedByteBuffer 继承了 ByteBuffer。因此它具有 ByteBuffer 的所有的方法。前面的程序创建的文件为 128M，这比操作系统一次允许载入的内存大。但是似乎我们可以一次访问到所有文件，因为只有一部分文件放入了内存，文件的其他部分被交换了出去。注意：底层操作系统的文件映射工具是用来最大化的提高性能。
 
-** 性能 **
+**性能**
 
 尽管旧的 I/O 流在用 nio 实现后性能有所提高，但是 “映射文件访问” 往往可以更加显著的提高速度。下面的程序进行了简单的性能比较
 ```java
