@@ -21,10 +21,10 @@ wait() 可以使你等待某个条件发生变化，而改变这个条件通常�
 有两种形式的 wait():
 
 - 第一种接受毫秒作为参数:指再次暂停的时间。
- - 在 wait() 期间对象锁是被释放的。
- - 可以通过 notif() 或 notifAll()，或者指令到期，从 wait() 中恢复执行。
+  - 在 wait() 期间对象锁是被释放的。
+  - 可以通过 notif() 或 notifAll()，或者指令到期，从 wait() 中恢复执行。
 - 第二种不接受参数的 wait().
- - 这种 wait() 将无线等待下去，直到线程接收到 notif() 或 notifAll()。
+  - 这种 wait() 将无线等待下去，直到线程接收到 notif() 或 notifAll()。
 
 wait()、notif()以及 notifAll() 有一个比较特殊的方面，那就是这些方法是基类 Object 的一部分，而不是属于 Thread 类。仅仅作为线程的功能却成为了通用基类的一部分。原因是这些方法操作的锁，也是所有对象的一部分。所以你可以将 wait() 放进任何同步控制方法里，而不用考虑这个类是继承自 Thread 还是 Runnable。实际上，只能在同步方法或者同步代码块里调用 wait()、notif() 或者 notifAll()。如果在非同步代码块里操作这些方法，程序可以通过编译，但是在运行时会得到 IllegalMonitorStateException 异常。意思是，在调用 wait()、notif() 或者 notifAll() 之前必须拥有获取对象的锁。
 
