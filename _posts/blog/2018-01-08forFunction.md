@@ -197,3 +197,9 @@ IntStream.iterate(5, e -> e - 1)
 
 ## 总结
 传统的 for 循环非常的强大，但是它过于复杂。Java 8 和 Java 9 中的新方法可以帮助我们简化迭代，甚至是复杂的迭代。方法 range、iterate 和 limit 的可变部分较少，有助于提高我们的代码效率。并且还满足了 Java 的一个要求，那就是局部连拉必须声明为 final 然后才能从内部类中访问它。将一个可变索引变量更换为实际的 final 参数只有很小的语义差别，但是它减少了大量的垃圾变量。最终得到更简洁、更优雅的代码。
+
+文章学习地址：
+
+感谢 Venkat Subramaniam 博士
+
+Venkat Subramaniam 博士站点：http://agiledeveloper.com/
