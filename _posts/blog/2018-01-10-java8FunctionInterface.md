@@ -236,3 +236,9 @@ order.transformAndPrint(orderItems -> orderItems.sorted(comparing(OrderItem::get
 将 lambda 表达式设计为函数接口类型的设计策略，有助于 Java 向早期的版本进行兼容。可以将 lambda 表达式传递给任何通常接收单一抽象方法接口的旧函数。要接收 lambda 表达式，方法的参数类型应为函数接口。
 
 在某些情况下，创建自己的函数接口是合情合理的，但在这么做时应该小心谨慎。仅在应用程序需要高度专业化的方法时，或者现有接口无法满足您的需求时，才考虑自定义函数接口。请始终检查一个 JDK 的内置函数接口中是否存在该功能。尽量使用内置函数接口。
+
+文章学习地址：
+
+感谢 Venkat Subramaniam 博士
+
+Venkat Subramaniam 博士站点：http://agiledeveloper.com/

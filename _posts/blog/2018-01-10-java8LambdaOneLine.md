@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java 8 新语法习惯 (完美的 lambda 表达式只有一行)
+title: Java8 新语法习惯 (完美的 lambda 表达式只有一行)
 categories: java8新语法习惯
 description: Java8 新语法完美的 lambda 表达式只有一行
 keywords: java,java8新语法,JDK8新语法,java8新语法完美的 lambda 表达式只有一行
@@ -139,3 +139,9 @@ public static int sumOfFactors(int number) {
 
 ## 总结
 简短的 lambda 表达式是提高代码可读性，这是函数式编程的重要好处之一。包含多行的 lambda 表达式具有相反的效果，会让代码变得杂乱且难以阅读。多行 lambda 表达式还难以测试和重用，这可能导致重复工作和代码质量差。通过将多行 lambda 表达式转移到一个命名函数中，然后从 lambda 表达式内调用该函数，这样很容易避免这些问题。简言之，避免多行 lambda 表达式。
+
+文章学习地址：
+
+感谢 Venkat Subramaniam 博士
+
+Venkat Subramaniam 博士站点：http://agiledeveloper.com/
