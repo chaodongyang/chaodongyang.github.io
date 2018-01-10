@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java 8 新语法习惯 (传递表达式的替代方案)
+title: Java8 新语法习惯 (传递表达式的替代方案)
 categories: java8新语法习惯
 description: Java8 新语法传递表达式的替代方案
 keywords: java,java8新语法,JDK8新语法,java8新语法传递表达式的替代方案
