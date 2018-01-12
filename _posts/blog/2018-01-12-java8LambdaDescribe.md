@@ -204,3 +204,8 @@ Function<Integer, Predicate<Integer>> isGreaterThan =
 
 ## 总结
 级联 lambda 表达式不是很常见，但您应该知道如何在代码中识别和理解它们。当一个 lambda 表达式返回另一个 lambda 表达式，而不是接受一个操作或返回一个值时，您将看到两个箭头。
+
+
+感谢 Venkat Subramaniam 博士
+
+Venkat Subramaniam 博士站点：http://agiledeveloper.com/
