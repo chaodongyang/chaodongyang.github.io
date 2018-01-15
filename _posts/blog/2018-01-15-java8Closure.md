@@ -177,3 +177,7 @@ map 方法现在接受一个闭包，而不是一个 lambda 表达式。我们�
 
 ## 总结
 闭包不同于 lambda 表达式，因为它们依赖于自己的词法范围来获取一些变量。因此，闭包可以捕获并携带状态。lambda 表达式是无状态的，闭包是有状态的。可以在您的程序中使用闭包，将状态从定义上下文携带到执行点。
+
+感谢 Venkat Subramaniam 博士
+
+Venkat Subramaniam 博士站点：http://agiledeveloper.com/
