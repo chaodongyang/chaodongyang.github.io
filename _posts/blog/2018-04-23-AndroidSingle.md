@@ -95,11 +95,11 @@ public class DCLSingle {
 ## 指令乱序以及 Volatile 关键字
 DCL 方式可以避免 ```99%```的情况下线程是安全的。在面对复杂的序列化和反射时可能会创建出多个实例。在 Java 1.5 之后虚拟机支持了指令乱序的特性。指令乱序是为了提高程序性能而导致的执行时的指令顺序和代码中的顺序不一致。Volatile 关键字用来修饰一个变量，提示编译器这个变量可能随时会修改。被这个关键字修饰过的变量会重新访问内存，这样就保证这个变量的真实性。
 
-![](/images/blog/neicun.png)
+![](/images/blog/20180423.png)
 
 看下面这张程序的简易执行图：
 
-![](/images/blog/luanxu.png)
+![](/images/blog/20180424.png)
 
 由于指令乱序的原因 dclSingle 变量和 new DCLSingle() 的执行顺序有可能混乱所以有可能造成已经 new DCLSingle() 之后 dclSingle 变量仍然为空。
 
